@@ -1,0 +1,80 @@
+==========================================================================================
+AIC2026 Group-aware Stratified Split V2
+==========================================================================================
+
+[0] 数据安全
+官方数据集：只读。
+脚本未移动、复制、删除、重命名或修改任何官方文件。
+输出目录：/home/xhm/Desktop/aicomp/splits/aic2026_group_stratified_v2
+
+[1] 总体划分
+Total       : 2000
+Train       : 1600 (80.00%)
+Validation  : 400 (20.00%)
+目标 Val    : 20.00%
+Objective   : 1.715047
+
+[2] Split 固定指纹
+train.txt SHA256: 96ff8ea67d06a98a7f58fc053724de1e0c991bf986c02b3ebc90c3808fe45a0d
+val.txt   SHA256: 6bcad2491fa4d0b09cd6e1ff5b5c8ef0fc19ecb18c005d0c719d53996693c233
+后续正式锁定验证集后，可用这两个 SHA256 确认 split 没有变化。
+
+[3] Atomic Groups
+Groups      : 745
+Train Groups: 612
+Val Groups  : 133
+Group min   : 1
+Group max   : 80
+Group mean  : 2.68
+
+[4] 类别分布
+id  class         instances(train/val/ratio)       images(train/val/ratio)
+ 0  person        4298/1201/21.84%           886/227/20.40%
+ 1  boat           109/  26/19.26%            50/ 12/19.35%
+ 2  animal        2420/ 641/20.94%           636/163/20.40%
+ 3  seat           513/ 108/17.39%           247/ 68/21.59%
+ 4  sign           655/ 154/19.04%           351/ 90/20.41%
+ 5  bicycle        534/ 132/19.82%           171/ 42/19.72%
+ 6  car           1259/ 312/19.86%           322/ 81/20.10%
+ 7  ball            72/  17/19.10%            60/ 15/20.00%
+ 8  light         1114/ 341/23.44%           365/102/21.84%
+ 9  garbage_can    225/  57/20.21%           185/ 46/19.91%
+10  uav            172/  32/15.69%           116/ 32/21.62%
+11  tricycle        18/   7/28.00%            17/  4/19.05%
+
+[5] 稀有类别重点
+boat        : train_images=50, val_images=12, total=62, val_ratio=19.35%
+ball        : train_images=60, val_images=15, total=75, val_ratio=20.00%
+uav         : train_images=116, val_images=32, total=148, val_ratio=21.62%
+tricycle    : train_images=17, val_images=4, total=21, val_ratio=19.05%
+
+[6] 数据来源
+hehe_png                         total=  89 train=  71 val=  18 ratio=20.22% PASS
+numeric_6digit_png               total= 903 train= 723 val= 180 ratio=19.93% PASS
+numeric_8digit_jpg               total= 149 train= 120 val=  29 ratio=19.46% PASS
+shuming_png                      total= 370 train= 296 val=  74 ratio=20.00% PASS
+structured_other_png             total= 436 train= 348 val=  88 ratio=20.18% PASS
+suppl_png                        total=  53 train=  42 val=  11 ratio=20.75% PASS
+
+来源 18%-22% 总体：PASS
+
+[7] 相似帧泄漏
+锁定阈值：dHash <= 10
+跨 Train/Val 相似对：0
+相似帧隔离：PASS
+
+[8] Bounding Box 数
+Train boxes : 11389
+Val boxes   : 3028
+Total boxes : 14417
+注：这里只按标签中的合法 class_id 统计，不修改官方标签内容。
+
+[9] 输出文件
+train.txt
+val.txt
+split_manifest.csv
+groups.csv
+class_split_stats.csv
+source_split_stats.csv
+cross_split_similar_pairs.csv
+split_stats.txt

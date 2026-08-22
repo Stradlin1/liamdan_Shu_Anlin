@@ -1,0 +1,528 @@
+﻿stem,issue
+000003_026_00000001,bbox_cross_image_boundary_line_1
+00000004,depth_is_jpeg
+00000004,depth_dtype_uint8
+00000004,"depth_not_single_channel_shape_(360, 640, 3)"
+000005_014_00000292,bbox_cross_image_boundary_line_6
+00000008,depth_is_jpeg
+00000008,depth_dtype_uint8
+00000008,"depth_not_single_channel_shape_(360, 640, 3)"
+000008_012_00000001,bbox_cross_image_boundary_line_4
+000011_008_00000001,bbox_cross_image_boundary_line_1
+000011_008_00000083,bbox_cross_image_boundary_line_3
+000011_008_00000083,bbox_cross_image_boundary_line_5
+000016_034_00000199,bbox_cross_image_boundary_line_1
+00000022,depth_is_jpeg
+00000022,depth_dtype_uint8
+00000022,"depth_not_single_channel_shape_(360, 640, 3)"
+00000025,depth_is_jpeg
+00000025,depth_dtype_uint8
+00000025,"depth_not_single_channel_shape_(360, 640, 3)"
+000029,bbox_cross_image_boundary_line_8
+000029,bbox_cross_image_boundary_line_9
+00000031,depth_is_jpeg
+00000031,depth_dtype_uint8
+00000031,"depth_not_single_channel_shape_(360, 640, 3)"
+00000033,depth_is_jpeg
+00000033,depth_dtype_uint8
+00000033,"depth_not_single_channel_shape_(360, 640, 3)"
+00000034,depth_is_jpeg
+00000034,depth_dtype_uint8
+00000034,"depth_not_single_channel_shape_(360, 640, 3)"
+00000036,depth_is_jpeg
+00000036,depth_dtype_uint8
+00000036,"depth_not_single_channel_shape_(360, 640, 3)"
+00000038,depth_is_jpeg
+00000038,depth_dtype_uint8
+00000038,"depth_not_single_channel_shape_(360, 640, 3)"
+000042,bbox_cross_image_boundary_line_28
+00000043,depth_is_jpeg
+00000043,depth_dtype_uint8
+00000043,"depth_not_single_channel_shape_(360, 640, 3)"
+000045,bbox_cross_image_boundary_line_23
+00000045,depth_is_jpeg
+00000045,depth_dtype_uint8
+00000045,"depth_not_single_channel_shape_(360, 640, 3)"
+00000047,depth_is_jpeg
+00000047,depth_dtype_uint8
+00000047,"depth_not_single_channel_shape_(360, 640, 3)"
+00000049,depth_is_jpeg
+00000049,depth_dtype_uint8
+00000049,"depth_not_single_channel_shape_(360, 640, 3)"
+000050,label_invalid_xywh_line_27
+000050,label_invalid_xywh_line_37
+00000050,depth_is_jpeg
+00000050,depth_dtype_uint8
+00000050,"depth_not_single_channel_shape_(360, 640, 3)"
+00000052,depth_is_jpeg
+00000052,depth_dtype_uint8
+00000052,"depth_not_single_channel_shape_(360, 640, 3)"
+00000054,depth_is_jpeg
+00000054,depth_dtype_uint8
+00000054,"depth_not_single_channel_shape_(360, 640, 3)"
+00000056,depth_is_jpeg
+00000056,depth_dtype_uint8
+00000056,"depth_not_single_channel_shape_(360, 640, 3)"
+00000057,depth_is_jpeg
+00000057,depth_dtype_uint8
+00000057,"depth_not_single_channel_shape_(360, 640, 3)"
+00000063,depth_is_jpeg
+00000063,depth_dtype_uint8
+00000063,"depth_not_single_channel_shape_(360, 640, 3)"
+00000068,depth_is_jpeg
+00000068,depth_dtype_uint8
+00000068,"depth_not_single_channel_shape_(360, 640, 3)"
+00000072,depth_is_jpeg
+00000072,depth_dtype_uint8
+00000072,"depth_not_single_channel_shape_(360, 640, 3)"
+00000084,depth_is_jpeg
+00000084,depth_dtype_uint8
+00000084,"depth_not_single_channel_shape_(360, 640, 3)"
+00000090,depth_is_jpeg
+00000090,depth_dtype_uint8
+00000090,"depth_not_single_channel_shape_(360, 640, 3)"
+00000093,depth_is_jpeg
+00000093,depth_dtype_uint8
+00000093,"depth_not_single_channel_shape_(360, 640, 3)"
+00000095,depth_is_jpeg
+00000095,depth_dtype_uint8
+00000095,"depth_not_single_channel_shape_(360, 640, 3)"
+00000098,depth_is_jpeg
+00000098,depth_dtype_uint8
+00000098,"depth_not_single_channel_shape_(360, 640, 3)"
+00000104,depth_is_jpeg
+00000104,depth_dtype_uint8
+00000104,"depth_not_single_channel_shape_(360, 640, 3)"
+00000106,depth_is_jpeg
+00000106,depth_dtype_uint8
+00000106,"depth_not_single_channel_shape_(360, 640, 3)"
+00000111,depth_is_jpeg
+00000111,depth_dtype_uint8
+00000111,"depth_not_single_channel_shape_(360, 640, 3)"
+00000118,depth_is_jpeg
+00000118,depth_dtype_uint8
+00000118,"depth_not_single_channel_shape_(360, 640, 3)"
+00000120,depth_is_jpeg
+00000120,depth_dtype_uint8
+00000120,"depth_not_single_channel_shape_(360, 640, 3)"
+00000122,depth_is_jpeg
+00000122,depth_dtype_uint8
+00000122,"depth_not_single_channel_shape_(360, 640, 3)"
+00000123,depth_is_jpeg
+00000123,depth_dtype_uint8
+00000123,"depth_not_single_channel_shape_(360, 640, 3)"
+00000129,depth_is_jpeg
+00000129,depth_dtype_uint8
+00000129,"depth_not_single_channel_shape_(360, 640, 3)"
+00000130,depth_is_jpeg
+00000130,depth_dtype_uint8
+00000130,"depth_not_single_channel_shape_(360, 640, 3)"
+00000136,depth_is_jpeg
+00000136,depth_dtype_uint8
+00000136,"depth_not_single_channel_shape_(360, 640, 3)"
+00000139,depth_is_jpeg
+00000139,depth_dtype_uint8
+00000139,"depth_not_single_channel_shape_(360, 640, 3)"
+00000143,depth_is_jpeg
+00000143,depth_dtype_uint8
+00000143,"depth_not_single_channel_shape_(360, 640, 3)"
+00000147,depth_is_jpeg
+00000147,depth_dtype_uint8
+00000147,"depth_not_single_channel_shape_(360, 640, 3)"
+00000157,depth_is_jpeg
+00000157,depth_dtype_uint8
+00000157,"depth_not_single_channel_shape_(360, 640, 3)"
+00000163,depth_is_jpeg
+00000163,depth_dtype_uint8
+00000163,"depth_not_single_channel_shape_(360, 640, 3)"
+00000168,depth_is_jpeg
+00000168,depth_dtype_uint8
+00000168,"depth_not_single_channel_shape_(360, 640, 3)"
+00000171,depth_is_jpeg
+00000171,depth_dtype_uint8
+00000171,"depth_not_single_channel_shape_(360, 640, 3)"
+00000175,depth_is_jpeg
+00000175,depth_dtype_uint8
+00000175,"depth_not_single_channel_shape_(360, 640, 3)"
+00000177,depth_is_jpeg
+00000177,depth_dtype_uint8
+00000177,"depth_not_single_channel_shape_(360, 640, 3)"
+00000180,depth_is_jpeg
+00000180,depth_dtype_uint8
+00000180,"depth_not_single_channel_shape_(360, 640, 3)"
+00000184,depth_is_jpeg
+00000184,depth_dtype_uint8
+00000184,"depth_not_single_channel_shape_(360, 640, 3)"
+00000189,depth_is_jpeg
+00000189,depth_dtype_uint8
+00000189,"depth_not_single_channel_shape_(360, 640, 3)"
+00000203,depth_is_jpeg
+00000203,depth_dtype_uint8
+00000203,"depth_not_single_channel_shape_(360, 640, 3)"
+00000205,depth_is_jpeg
+00000205,depth_dtype_uint8
+00000205,"depth_not_single_channel_shape_(360, 640, 3)"
+00000207,depth_is_jpeg
+00000207,depth_dtype_uint8
+00000207,"depth_not_single_channel_shape_(360, 640, 3)"
+00000212,depth_is_jpeg
+00000212,depth_dtype_uint8
+00000212,"depth_not_single_channel_shape_(360, 640, 3)"
+00000214,depth_is_jpeg
+00000214,depth_dtype_uint8
+00000214,"depth_not_single_channel_shape_(360, 640, 3)"
+00000216,depth_is_jpeg
+00000216,depth_dtype_uint8
+00000216,"depth_not_single_channel_shape_(360, 640, 3)"
+00000220,depth_is_jpeg
+00000220,depth_dtype_uint8
+00000220,"depth_not_single_channel_shape_(360, 640, 3)"
+00000221,depth_is_jpeg
+00000221,depth_dtype_uint8
+00000221,"depth_not_single_channel_shape_(360, 640, 3)"
+000224,bbox_cross_image_boundary_line_1
+00000225,depth_is_jpeg
+00000225,depth_dtype_uint8
+00000225,"depth_not_single_channel_shape_(360, 640, 3)"
+00000228,depth_is_jpeg
+00000228,depth_dtype_uint8
+00000228,"depth_not_single_channel_shape_(360, 640, 3)"
+00000230,depth_is_jpeg
+00000230,depth_dtype_uint8
+00000230,"depth_not_single_channel_shape_(360, 640, 3)"
+00000234,depth_is_jpeg
+00000234,depth_dtype_uint8
+00000234,"depth_not_single_channel_shape_(360, 640, 3)"
+00000239,depth_is_jpeg
+00000239,depth_dtype_uint8
+00000239,"depth_not_single_channel_shape_(360, 640, 3)"
+00000241,depth_is_jpeg
+00000241,depth_dtype_uint8
+00000241,"depth_not_single_channel_shape_(360, 640, 3)"
+00000243,depth_is_jpeg
+00000243,depth_dtype_uint8
+00000243,"depth_not_single_channel_shape_(360, 640, 3)"
+00000244,depth_is_jpeg
+00000244,depth_dtype_uint8
+00000244,"depth_not_single_channel_shape_(360, 640, 3)"
+00000248,depth_is_jpeg
+00000248,depth_dtype_uint8
+00000248,"depth_not_single_channel_shape_(360, 640, 3)"
+00000253,depth_is_jpeg
+00000253,depth_dtype_uint8
+00000253,"depth_not_single_channel_shape_(360, 640, 3)"
+00000257,depth_is_jpeg
+00000257,depth_dtype_uint8
+00000257,"depth_not_single_channel_shape_(360, 640, 3)"
+00000271,depth_is_jpeg
+00000271,depth_dtype_uint8
+00000271,"depth_not_single_channel_shape_(360, 640, 3)"
+00000273,depth_is_jpeg
+00000273,depth_dtype_uint8
+00000273,"depth_not_single_channel_shape_(360, 640, 3)"
+00000275,depth_is_jpeg
+00000275,depth_dtype_uint8
+00000275,"depth_not_single_channel_shape_(360, 640, 3)"
+00000282,depth_is_jpeg
+00000282,depth_dtype_uint8
+00000282,"depth_not_single_channel_shape_(360, 640, 3)"
+00000291,depth_is_jpeg
+00000291,depth_dtype_uint8
+00000291,"depth_not_single_channel_shape_(360, 640, 3)"
+00000293,depth_is_jpeg
+00000293,depth_dtype_uint8
+00000293,"depth_not_single_channel_shape_(360, 640, 3)"
+00000321,depth_is_jpeg
+00000321,depth_dtype_uint8
+00000321,"depth_not_single_channel_shape_(360, 640, 3)"
+00000332,depth_is_jpeg
+00000332,depth_dtype_uint8
+00000332,"depth_not_single_channel_shape_(360, 640, 3)"
+00000333,depth_is_jpeg
+00000333,depth_dtype_uint8
+00000333,"depth_not_single_channel_shape_(360, 640, 3)"
+00000339,depth_is_jpeg
+00000339,depth_dtype_uint8
+00000339,"depth_not_single_channel_shape_(360, 640, 3)"
+00000344,depth_is_jpeg
+00000344,depth_dtype_uint8
+00000344,"depth_not_single_channel_shape_(360, 640, 3)"
+00000346,depth_is_jpeg
+00000346,depth_dtype_uint8
+00000346,"depth_not_single_channel_shape_(360, 640, 3)"
+00000355,depth_is_jpeg
+00000355,depth_dtype_uint8
+00000355,"depth_not_single_channel_shape_(360, 640, 3)"
+00000364,depth_is_jpeg
+00000364,depth_dtype_uint8
+00000364,"depth_not_single_channel_shape_(360, 640, 3)"
+00000367,depth_is_jpeg
+00000367,depth_dtype_uint8
+00000367,"depth_not_single_channel_shape_(360, 640, 3)"
+00000371,depth_is_jpeg
+00000371,depth_dtype_uint8
+00000371,"depth_not_single_channel_shape_(360, 640, 3)"
+00000373,depth_is_jpeg
+00000373,depth_dtype_uint8
+00000373,"depth_not_single_channel_shape_(360, 640, 3)"
+00000376,depth_is_jpeg
+00000376,depth_dtype_uint8
+00000376,"depth_not_single_channel_shape_(360, 640, 3)"
+00000394,depth_is_jpeg
+00000394,depth_dtype_uint8
+00000394,"depth_not_single_channel_shape_(360, 640, 3)"
+00000396,depth_is_jpeg
+00000396,depth_dtype_uint8
+00000396,"depth_not_single_channel_shape_(360, 640, 3)"
+00000399,depth_is_jpeg
+00000399,depth_dtype_uint8
+00000399,"depth_not_single_channel_shape_(360, 640, 3)"
+00000401,depth_is_jpeg
+00000401,depth_dtype_uint8
+00000401,"depth_not_single_channel_shape_(360, 640, 3)"
+00000410,depth_is_jpeg
+00000410,depth_dtype_uint8
+00000410,"depth_not_single_channel_shape_(360, 640, 3)"
+00000414,depth_is_jpeg
+00000414,depth_dtype_uint8
+00000414,"depth_not_single_channel_shape_(360, 640, 3)"
+00000415,depth_is_jpeg
+00000415,depth_dtype_uint8
+00000415,"depth_not_single_channel_shape_(360, 640, 3)"
+00000417,depth_is_jpeg
+00000417,depth_dtype_uint8
+00000417,"depth_not_single_channel_shape_(360, 640, 3)"
+00000419,depth_is_jpeg
+00000419,depth_dtype_uint8
+00000419,"depth_not_single_channel_shape_(360, 640, 3)"
+00000423,depth_is_jpeg
+00000423,depth_dtype_uint8
+00000423,"depth_not_single_channel_shape_(360, 640, 3)"
+00000426,depth_is_jpeg
+00000426,depth_dtype_uint8
+00000426,"depth_not_single_channel_shape_(360, 640, 3)"
+00000433,depth_is_jpeg
+00000433,depth_dtype_uint8
+00000433,"depth_not_single_channel_shape_(360, 640, 3)"
+00000435,depth_is_jpeg
+00000435,depth_dtype_uint8
+00000435,"depth_not_single_channel_shape_(360, 640, 3)"
+000437,bbox_cross_image_boundary_line_11
+000437,bbox_cross_image_boundary_line_12
+00000440,depth_is_jpeg
+00000440,depth_dtype_uint8
+00000440,"depth_not_single_channel_shape_(360, 640, 3)"
+00000446,depth_is_jpeg
+00000446,depth_dtype_uint8
+00000446,"depth_not_single_channel_shape_(360, 640, 3)"
+00000447,depth_is_jpeg
+00000447,depth_dtype_uint8
+00000447,"depth_not_single_channel_shape_(360, 640, 3)"
+00000460,depth_is_jpeg
+00000460,depth_dtype_uint8
+00000460,"depth_not_single_channel_shape_(360, 640, 3)"
+00000462,depth_is_jpeg
+00000462,depth_dtype_uint8
+00000462,"depth_not_single_channel_shape_(360, 640, 3)"
+00000467,depth_is_jpeg
+00000467,depth_dtype_uint8
+00000467,"depth_not_single_channel_shape_(360, 640, 3)"
+00000480,depth_is_jpeg
+00000480,depth_dtype_uint8
+00000480,"depth_not_single_channel_shape_(360, 640, 3)"
+00000481,depth_is_jpeg
+00000481,depth_dtype_uint8
+00000481,"depth_not_single_channel_shape_(360, 640, 3)"
+00000485,depth_is_jpeg
+00000485,depth_dtype_uint8
+00000485,"depth_not_single_channel_shape_(360, 640, 3)"
+00000488,depth_is_jpeg
+00000488,depth_dtype_uint8
+00000488,"depth_not_single_channel_shape_(360, 640, 3)"
+00000490,depth_is_jpeg
+00000490,depth_dtype_uint8
+00000490,"depth_not_single_channel_shape_(360, 640, 3)"
+00000497,depth_is_jpeg
+00000497,depth_dtype_uint8
+00000497,"depth_not_single_channel_shape_(360, 640, 3)"
+00000499,depth_is_jpeg
+00000499,depth_dtype_uint8
+00000499,"depth_not_single_channel_shape_(360, 640, 3)"
+00000501,depth_is_jpeg
+00000501,depth_dtype_uint8
+00000501,"depth_not_single_channel_shape_(360, 640, 3)"
+00000506,depth_is_jpeg
+00000506,depth_dtype_uint8
+00000506,"depth_not_single_channel_shape_(360, 640, 3)"
+00000508,depth_is_jpeg
+00000508,depth_dtype_uint8
+00000508,"depth_not_single_channel_shape_(360, 640, 3)"
+00000510,depth_is_jpeg
+00000510,depth_dtype_uint8
+00000510,"depth_not_single_channel_shape_(360, 640, 3)"
+00000512,depth_is_jpeg
+00000512,depth_dtype_uint8
+00000512,"depth_not_single_channel_shape_(360, 640, 3)"
+00000515,depth_is_jpeg
+00000515,depth_dtype_uint8
+00000515,"depth_not_single_channel_shape_(360, 640, 3)"
+00000519,depth_is_jpeg
+00000519,depth_dtype_uint8
+00000519,"depth_not_single_channel_shape_(360, 640, 3)"
+00000524,depth_is_jpeg
+00000524,depth_dtype_uint8
+00000524,"depth_not_single_channel_shape_(360, 640, 3)"
+00000526,depth_is_jpeg
+00000526,depth_dtype_uint8
+00000526,"depth_not_single_channel_shape_(360, 640, 3)"
+00000529,depth_is_jpeg
+00000529,depth_dtype_uint8
+00000529,"depth_not_single_channel_shape_(360, 640, 3)"
+00000535,depth_is_jpeg
+00000535,depth_dtype_uint8
+00000535,"depth_not_single_channel_shape_(360, 640, 3)"
+00000554,depth_is_jpeg
+00000554,depth_dtype_uint8
+00000554,"depth_not_single_channel_shape_(360, 640, 3)"
+00000556,depth_is_jpeg
+00000556,depth_dtype_uint8
+00000556,"depth_not_single_channel_shape_(360, 640, 3)"
+00000560,depth_is_jpeg
+00000560,depth_dtype_uint8
+00000560,"depth_not_single_channel_shape_(360, 640, 3)"
+00000572,depth_is_jpeg
+00000572,depth_dtype_uint8
+00000572,"depth_not_single_channel_shape_(360, 640, 3)"
+00000576,depth_is_jpeg
+00000576,depth_dtype_uint8
+00000576,"depth_not_single_channel_shape_(360, 640, 3)"
+00000577,depth_is_jpeg
+00000577,depth_dtype_uint8
+00000577,"depth_not_single_channel_shape_(360, 640, 3)"
+00000579,depth_is_jpeg
+00000579,depth_dtype_uint8
+00000579,"depth_not_single_channel_shape_(360, 640, 3)"
+00000585,depth_is_jpeg
+00000585,depth_dtype_uint8
+00000585,"depth_not_single_channel_shape_(360, 640, 3)"
+00000586,depth_is_jpeg
+00000586,depth_dtype_uint8
+00000586,"depth_not_single_channel_shape_(360, 640, 3)"
+00000592,depth_is_jpeg
+00000592,depth_dtype_uint8
+00000592,"depth_not_single_channel_shape_(360, 640, 3)"
+00000597,depth_is_jpeg
+00000597,depth_dtype_uint8
+00000597,"depth_not_single_channel_shape_(360, 640, 3)"
+00000599,depth_is_jpeg
+00000599,depth_dtype_uint8
+00000599,"depth_not_single_channel_shape_(360, 640, 3)"
+00000609,depth_is_jpeg
+00000609,depth_dtype_uint8
+00000609,"depth_not_single_channel_shape_(360, 640, 3)"
+00000615,depth_is_jpeg
+00000615,depth_dtype_uint8
+00000615,"depth_not_single_channel_shape_(360, 640, 3)"
+00000618,depth_is_jpeg
+00000618,depth_dtype_uint8
+00000618,"depth_not_single_channel_shape_(360, 640, 3)"
+00000620,depth_is_jpeg
+00000620,depth_dtype_uint8
+00000620,"depth_not_single_channel_shape_(360, 640, 3)"
+00000622,depth_is_jpeg
+00000622,depth_dtype_uint8
+00000622,"depth_not_single_channel_shape_(360, 640, 3)"
+00000629,depth_is_jpeg
+00000629,depth_dtype_uint8
+00000629,"depth_not_single_channel_shape_(360, 640, 3)"
+00000634,depth_is_jpeg
+00000634,depth_dtype_uint8
+00000634,"depth_not_single_channel_shape_(360, 640, 3)"
+00000638,depth_is_jpeg
+00000638,depth_dtype_uint8
+00000638,"depth_not_single_channel_shape_(360, 640, 3)"
+00000640,depth_is_jpeg
+00000640,depth_dtype_uint8
+00000640,"depth_not_single_channel_shape_(360, 640, 3)"
+00000642,depth_is_jpeg
+00000642,depth_dtype_uint8
+00000642,"depth_not_single_channel_shape_(360, 640, 3)"
+00000643,depth_is_jpeg
+00000643,depth_dtype_uint8
+00000643,"depth_not_single_channel_shape_(360, 640, 3)"
+000644,bbox_cross_image_boundary_line_15
+00000649,depth_is_jpeg
+00000649,depth_dtype_uint8
+00000649,"depth_not_single_channel_shape_(360, 640, 3)"
+00000652,depth_is_jpeg
+00000652,depth_dtype_uint8
+00000652,"depth_not_single_channel_shape_(360, 640, 3)"
+00000658,depth_is_jpeg
+00000658,depth_dtype_uint8
+00000658,"depth_not_single_channel_shape_(360, 640, 3)"
+00000682,depth_is_jpeg
+00000682,depth_dtype_uint8
+00000682,"depth_not_single_channel_shape_(360, 640, 3)"
+000755,bbox_cross_image_boundary_line_3
+000782,bbox_cross_image_boundary_line_5
+000850,bbox_cross_image_boundary_line_8
+000868,bbox_cross_image_boundary_line_12
+001029,bbox_cross_image_boundary_line_4
+001038,bbox_cross_image_boundary_line_7
+001047,bbox_cross_image_boundary_line_12
+001168,bbox_cross_image_boundary_line_1
+001202,bbox_cross_image_boundary_line_7
+001257,bbox_cross_image_boundary_line_1
+001260,bbox_cross_image_boundary_line_1
+001265,bbox_cross_image_boundary_line_6
+001387,bbox_cross_image_boundary_line_10
+001388,bbox_cross_image_boundary_line_4
+001470,bbox_cross_image_boundary_line_14
+001677,bbox_cross_image_boundary_line_1
+001712,bbox_cross_image_boundary_line_1
+001803,bbox_cross_image_boundary_line_6
+001813,bbox_cross_image_boundary_line_6
+001833,bbox_cross_image_boundary_line_3
+001835,bbox_cross_image_boundary_line_1
+001835,bbox_cross_image_boundary_line_3
+001841,bbox_cross_image_boundary_line_1
+001841,bbox_cross_image_boundary_line_3
+001851,bbox_cross_image_boundary_line_1
+001851,bbox_cross_image_boundary_line_3
+001854,bbox_cross_image_boundary_line_1
+001859,bbox_cross_image_boundary_line_3
+001865,bbox_cross_image_boundary_line_1
+001873,bbox_cross_image_boundary_line_1
+001881,bbox_cross_image_boundary_line_1
+001884,bbox_cross_image_boundary_line_1
+001884,bbox_cross_image_boundary_line_8
+001886,bbox_cross_image_boundary_line_1
+001886,bbox_cross_image_boundary_line_3
+001891,bbox_cross_image_boundary_line_1
+001986,bbox_cross_image_boundary_line_6
+001987,bbox_cross_image_boundary_line_6
+001989,bbox_cross_image_boundary_line_6
+001989,bbox_cross_image_boundary_line_7
+001997,bbox_cross_image_boundary_line_8
+002005,bbox_cross_image_boundary_line_8
+002006,bbox_cross_image_boundary_line_8
+002013,bbox_cross_image_boundary_line_8
+002014,bbox_cross_image_boundary_line_8
+002016,bbox_cross_image_boundary_line_8
+002022,bbox_cross_image_boundary_line_8
+002029,bbox_cross_image_boundary_line_8
+002065,bbox_cross_image_boundary_line_12
+002079,bbox_cross_image_boundary_line_11
+002598,bbox_cross_image_boundary_line_4
+002598,bbox_cross_image_boundary_line_6
+002598,bbox_cross_image_boundary_line_14
+002724,bbox_cross_image_boundary_line_2
+003107,bbox_cross_image_boundary_line_1
+003107,label_invalid_xywh_line_2
+003240,bbox_cross_image_boundary_line_1
+003679,bbox_cross_image_boundary_line_9
+003817,label_invalid_xywh_line_3
+003942,bbox_cross_image_boundary_line_1
+003963,bbox_cross_image_boundary_line_40
+shuming_888_00000023,bbox_cross_image_boundary_line_2
+shuming_891_00000073,bbox_cross_image_boundary_line_2

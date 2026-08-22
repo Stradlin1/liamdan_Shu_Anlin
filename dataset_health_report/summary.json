@@ -1,0 +1,112 @@
+{
+  "dataset_root": "/home/xhm/Desktop/aicomp/datasets/AIC2026_Train_2000",
+  "expected_samples": 2000,
+  "unique_stems_union": 2000,
+  "complete_samples": 2000,
+  "visible_stems": 2000,
+  "infrared_stems": 2000,
+  "depth_stems": 2000,
+  "label_stems": 2000,
+  "total_instances": 14413,
+  "empty_label_files": 0,
+  "issues_total": 527,
+  "visible_shapes": {
+    "1080x1920x3": 1851,
+    "360x640x3": 149
+  },
+  "infrared_shapes": {
+    "1080x1920x3": 1851,
+    "360x640x3": 149
+  },
+  "depth_shapes": {
+    "1080x1920": 1851,
+    "360x640x3": 149
+  },
+  "visible_dtypes": {
+    "uint8": 2000
+  },
+  "infrared_dtypes": {
+    "uint8": 2000
+  },
+  "depth_dtypes": {
+    "uint16": 1851,
+    "uint8": 149
+  },
+  "format_counts": {
+    "visible": {
+      ".png": 1851,
+      ".jpg": 149
+    },
+    "infrared": {
+      ".png": 1851,
+      ".jpg": 149
+    },
+    "depth": {
+      ".png": 1851,
+      ".jpg": 149
+    }
+  },
+  "depth": {
+    "mean_zero_ratio": 0.31487767722800925,
+    "median_zero_ratio": 0.2744548128858025,
+    "mean_valid_ratio": 0.6686223941454476,
+    "median_valid_ratio": 0.7252611400462963,
+    "valid_depth_mm_p01": 1181.0,
+    "valid_depth_mm_p05": 2330.0,
+    "valid_depth_mm_p50": 7609.0,
+    "valid_depth_mm_p95": 17854.0,
+    "valid_depth_mm_p99": 19475.0
+  },
+  "infrared": {
+    "mean_black_ratio": 0.07315079065393518,
+    "median_black_ratio": 0.05078317901234568,
+    "mean_channel_mad": 0.9645325323827565,
+    "three_channel_images": 2000,
+    "exact_equal_channel_images": 121
+  },
+  "bbox": {
+    "width_px_p01": 12.9999936,
+    "width_px_p05": 18.0,
+    "width_px_p50": 69.0,
+    "height_px_p01": 13.02772608,
+    "height_px_p05": 23.000004,
+    "height_px_p50": 80.000028,
+    "area_ratio_p01": 0.0001374421875,
+    "area_ratio_p05": 0.0002893514375,
+    "area_ratio_p50": 0.0030695392554,
+    "coco_small": 1768,
+    "coco_medium": 6880,
+    "coco_large": 5765
+  },
+  "adjacent_similarity": {
+    "pairs_checked": 1999,
+    "very_similar_dhash_le_5": 153,
+    "similar_dhash_6_to_10": 87
+  },
+  "issue_counts": {
+    "bbox_cross_image_boundary_line_1": 22,
+    "depth_is_jpeg": 149,
+    "depth_dtype_uint8": 149,
+    "depth_not_single_channel_shape_(360, 640, 3)": 149,
+    "bbox_cross_image_boundary_line_6": 8,
+    "bbox_cross_image_boundary_line_4": 4,
+    "bbox_cross_image_boundary_line_3": 8,
+    "bbox_cross_image_boundary_line_5": 2,
+    "bbox_cross_image_boundary_line_8": 11,
+    "bbox_cross_image_boundary_line_9": 2,
+    "bbox_cross_image_boundary_line_28": 1,
+    "bbox_cross_image_boundary_line_23": 1,
+    "label_invalid_xywh_line_27": 1,
+    "label_invalid_xywh_line_37": 1,
+    "bbox_cross_image_boundary_line_11": 2,
+    "bbox_cross_image_boundary_line_12": 4,
+    "bbox_cross_image_boundary_line_15": 1,
+    "bbox_cross_image_boundary_line_7": 3,
+    "bbox_cross_image_boundary_line_10": 1,
+    "bbox_cross_image_boundary_line_14": 2,
+    "bbox_cross_image_boundary_line_2": 3,
+    "label_invalid_xywh_line_2": 1,
+    "label_invalid_xywh_line_3": 1,
+    "bbox_cross_image_boundary_line_40": 1
+  }
+}

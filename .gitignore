@@ -1,0 +1,83 @@
+# ============================================================
+# Python
+# ============================================================
+
+__pycache__/
+*.py[cod]
+*.so
+*.egg-info/
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.ipynb_checkpoints/
+
+# ============================================================
+# Virtual environments / secrets
+# ============================================================
+
+.env
+.env.*
+.venv/
+venv/
+env/
+
+# ============================================================
+# IDE / OS
+# ============================================================
+
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
+
+# ============================================================
+# AIC2026 official / generated datasets
+# DO NOT upload competition datasets to GitHub
+# ============================================================
+
+datasets/
+
+# YOLO views:
+# keep data.yaml, but do not track thousands of images/labels
+yolo_views/*/images/
+yolo_views/*/labels/
+
+# Ultralytics dataset caches
+*.cache
+
+# ============================================================
+# Experiment outputs
+# ============================================================
+
+runs/
+wandb/
+
+# ============================================================
+# Model weights / exported models
+# ============================================================
+
+pretrained/
+
+*.pt
+*.pth
+*.ckpt
+*.onnx
+*.engine
+*.bin
+
+# ============================================================
+# Generated data / submission packages
+# ============================================================
+
+*.zip
+*.tar
+*.tar.gz
+*.npy
+*.npz
+
+# ============================================================
+# Ultralytics is an independent upstream Git repository.
+# Its exact commit is recorded under environment/.
+# ============================================================
+
+ultralytics/

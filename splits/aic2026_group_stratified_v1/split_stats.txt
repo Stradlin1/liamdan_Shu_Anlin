@@ -1,0 +1,71 @@
+========================================================================================
+AIC2026 Train / Validation Split Report
+========================================================================================
+
+[重要说明]
+本次划分没有移动、复制、删除、重命名或修改任何官方训练数据。
+只生成 train/val 索引及统计文件。
+
+[1] 总体
+总样本数       : 2000
+Train          : 1599 (79.9500%)
+Validation     : 401 (20.0500%)
+目标 Val 比例  : 20.00%
+Objective      : 0.21122955
+
+[2] Group
+Group 总数     : 766
+Train Groups   : 569
+Val Groups     : 197
+最小 Group     : 1
+最大 Group     : 50
+平均 Group     : 2.61
+
+[3] Bounding Box 实例
+Train boxes    : 11486
+Val boxes      : 2931
+Total boxes    : 14417
+
+[4] 类别分布
+id  class         total  train  val   val_inst%   train_img  val_img  val_img%
+ 0  person        5499   4285  1214     22.08%     910       203     18.24%
+ 1  boat           135    109    26     19.26%      50        12     19.35%
+ 2  animal        3061   2419   642     20.97%     655       144     18.02%
+ 3  seat           621    498   123     19.81%     259        56     17.78%
+ 4  sign           809    632   177     21.88%     350        91     20.63%
+ 5  bicycle        666    535   131     19.67%     172        41     19.25%
+ 6  car           1571   1335   236     15.02%     326        77     19.11%
+ 7  ball            89     71    18     20.22%      62        13     17.33%
+ 8  light         1455   1199   256     17.59%     376        91     19.49%
+ 9  garbage_can    282    222    60     21.28%     189        42     18.18%
+10  uav            204    160    44     21.57%     112        36     24.32%
+11  tricycle        25     21     4     16.00%      17         4     19.05%
+
+[5] 数据来源分布
+hehe_png                       total=  89 train=  71 val=  18 val_ratio=20.22%
+numeric_6digit_png             total= 903 train= 753 val= 150 val_ratio=16.61%
+numeric_8digit_jpg             total= 149 train= 124 val=  25 val_ratio=16.78%
+shuming_png                    total= 370 train= 273 val=  97 val_ratio=26.22%
+structured_other_png           total= 436 train= 336 val= 100 val_ratio=22.94%
+suppl_png                      total=  53 train=  42 val=  11 val_ratio=20.75%
+
+[6] 相邻图视觉泄漏检查
+dHash <= 5 跨 split：0
+dHash 6~10 跨 split：6
+极相似帧强约束：PASS
+
+[7] 稀有类别重点
+boat        : train_images=50, val_images=12, total_images=62, val_ratio=19.35%
+ball        : train_images=62, val_images=13, total_images=75, val_ratio=17.33%
+uav         : train_images=112, val_images=36, total_images=148, val_ratio=24.32%
+tricycle    : train_images=17, val_images=4, total_images=21, val_ratio=19.05%
+
+[8] 输出文件
+train.txt                      Train basename 列表
+val.txt                        Validation basename 列表
+split_manifest.csv             每个样本的最终 split
+groups.csv                     Group 分组情况
+class_split_stats.csv          12 类统计
+source_split_stats.csv         数据来源统计
+cross_split_similar_pairs.csv  相似帧泄漏检查
+split_stats.txt                本报告

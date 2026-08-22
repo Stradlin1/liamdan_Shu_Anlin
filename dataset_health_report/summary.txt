@@ -1,0 +1,111 @@
+================================================================================
+AIC2026 数据集体检报告
+================================================================================
+
+[1] 数据完整性
+预期样本数        : 2000
+联合 basename 数  : 2000
+完整四件套样本数  : 2000
+visible           : 2000
+infrared          : 2000
+depth             : 2000
+labels            : 2000
+
+[2] 文件格式
+visible   : {'.png': 1851, '.jpg': 149}
+infrared  : {'.png': 1851, '.jpg': 149}
+depth     : {'.png': 1851, '.jpg': 149}
+
+[3] 图像尺寸
+visible  : {'1080x1920x3': 1851, '360x640x3': 149}
+infrared : {'1080x1920x3': 1851, '360x640x3': 149}
+depth    : {'1080x1920': 1851, '360x640x3': 149}
+
+[4] 图像 dtype
+visible  : {'uint8': 2000}
+infrared : {'uint8': 2000}
+depth    : {'uint16': 1851, 'uint8': 149}
+
+[5] Depth 数据
+有效深度定义      : 300 ~ 19999 mm
+平均 zero ratio   : 0.3149
+中位 zero ratio   : 0.2745
+平均 valid ratio  : 0.6686
+中位 valid ratio  : 0.7253
+有效深度 P01/P05/P50/P95/P99 mm : 1181.0 / 2330.0 / 7609.0 / 17854.0 / 19475.0
+
+[6] Infrared
+平均近黑像素比例  : 0.0732
+中位近黑像素比例  : 0.0508
+三通道图数量      : 2000
+三通道完全相等    : 121
+平均通道 MAD      : 0.9645
+
+[7] 标签
+目标总实例数      : 14413
+空标签文件        : 0
+每图目标数 P05/P50/P95 : 1.0 / 5.0 / 21.0
+
+[8] 类别分布
+ 0 person       instances=  5496 images= 1112
+ 1 boat         instances=   135 images=   62
+ 2 animal       instances=  3061 images=  799
+ 3 seat         instances=   621 images=  315
+ 4 sign         instances=   809 images=  441
+ 5 bicycle      instances=   665 images=  213
+ 6 car          instances=  1571 images=  403
+ 7 ball         instances=    89 images=   75
+ 8 light        instances=  1455 images=  467
+ 9 garbage_can  instances=   282 images=  231
+10 uav          instances=   204 images=  148
+11 tricycle     instances=    25 images=   21
+
+[9] Bounding Box
+width px P01/P05/P50 : 13.0 / 18.0 / 69.0
+height px P01/P05/P50: 13.0 / 23.0 / 80.0
+area ratio P01/P05/P50: 0.000137 / 0.000289 / 0.003070
+COCO small  : 1768
+COCO medium : 6880
+COCO large  : 5765
+
+[10] 相邻 visible 图像相似度
+检查相邻对数       : 1999
+dHash <= 5 极相似  : 153
+dHash 6~10 较相似  : 87
+
+说明：如果极相似相邻帧很多，后续不建议随机逐图划分 train/val。
+
+[11] Issues
+问题记录总数       : 527
+   149  depth_is_jpeg
+   149  depth_dtype_uint8
+   149  depth_not_single_channel_shape_(360, 640, 3)
+    22  bbox_cross_image_boundary_line_1
+    11  bbox_cross_image_boundary_line_8
+     8  bbox_cross_image_boundary_line_6
+     8  bbox_cross_image_boundary_line_3
+     4  bbox_cross_image_boundary_line_4
+     4  bbox_cross_image_boundary_line_12
+     3  bbox_cross_image_boundary_line_7
+     3  bbox_cross_image_boundary_line_2
+     2  bbox_cross_image_boundary_line_5
+     2  bbox_cross_image_boundary_line_9
+     2  bbox_cross_image_boundary_line_11
+     2  bbox_cross_image_boundary_line_14
+     1  bbox_cross_image_boundary_line_28
+     1  bbox_cross_image_boundary_line_23
+     1  label_invalid_xywh_line_27
+     1  label_invalid_xywh_line_37
+     1  bbox_cross_image_boundary_line_15
+     1  bbox_cross_image_boundary_line_10
+     1  label_invalid_xywh_line_2
+     1  label_invalid_xywh_line_3
+     1  bbox_cross_image_boundary_line_40
+
+[12] 输出文件
+summary.txt              总报告
+summary.json             结构化总报告
+samples.csv              每个样本详细信息
+issues.csv               所有异常
+class_stats.csv          类别统计
+adjacent_similarity.csv 相邻帧相似度

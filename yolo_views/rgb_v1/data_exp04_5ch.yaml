@@ -1,0 +1,20 @@
+train: images/train
+val: images/val
+
+names:
+  0: person
+  1: boat
+  2: animal
+  3: seat
+  4: sign
+  5: bicycle
+  6: car
+  7: ball
+  8: light
+  9: garbage_can
+  10: uav
+  11: tricycle
+
+# Exp04 RGB + IR + Depth Early Fusion
+# Input order: [R, G, B, IR, Depth]
+channels: 5

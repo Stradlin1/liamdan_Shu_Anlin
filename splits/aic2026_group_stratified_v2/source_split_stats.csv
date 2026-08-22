@@ -1,0 +1,7 @@
+﻿source,total,train,val,val_ratio,target_ratio,inside_18_22_percent
+hehe_png,89,71,18,0.20224719101123595,0.2,PASS
+numeric_6digit_png,903,723,180,0.19933554817275748,0.2,PASS
+numeric_8digit_jpg,149,120,29,0.19463087248322147,0.2,PASS
+shuming_png,370,296,74,0.2,0.2,PASS
+structured_other_png,436,348,88,0.2018348623853211,0.2,PASS
+suppl_png,53,42,11,0.20754716981132076,0.2,PASS

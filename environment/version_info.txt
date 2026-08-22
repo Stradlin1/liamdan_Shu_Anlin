@@ -1,0 +1,10 @@
+Date: 2026-08-22T15:48:55+08:00
+
+Python 3.10.20
+
+torch: 2.8.0+cu128
+cuda: 12.8
+ultralytics: 8.4.124
+
+Ultralytics source commit:
+64e29b080b3893bd9bb5ce095357c6da9662cce4

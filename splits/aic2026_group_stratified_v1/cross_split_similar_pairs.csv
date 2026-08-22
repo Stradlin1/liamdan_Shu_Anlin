@@ -1,0 +1,7 @@
+﻿stem_a,split_a,stem_b,split_b,dhash_distance,level
+hehe_105_000002_001_00000201,val,hehe_107_000002_001_00000101,train,7,SIMILAR
+shuming_430_00000125,val,shuming_431_00000134,train,10,SIMILAR
+shuming_753_00000172,val,shuming_755_00000284,train,10,SIMILAR
+shuming_891_00000073,val,shuming_892_00000065,train,10,SIMILAR
+shuming_1299_00000258,val,shuming_1301_00000165,train,10,SIMILAR
+shuming_1327_00000141,train,shuming_1333_00000220,val,7,SIMILAR
