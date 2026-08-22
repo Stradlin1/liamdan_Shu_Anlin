@@ -36,6 +36,7 @@ Thumbs.db
 # ============================================================
 
 datasets/
+docs/
 
 # YOLO views:
 # keep data.yaml, but do not track thousands of images/labels
