@@ -2,38 +2,43 @@
 # -*- coding: utf-8 -*-
 
 """
-AIC2026 Exp04
-RGB + IR + Depth 5-channel Early Fusion YOLO11s
+AIC2026 configurable early-fusion YOLO11s model.
 
-Input channel order:
-    [R, G, B, IR, Depth]
+Supported inputs:
+    RGB, RGB+IR, RGB+Depth, RGB+IR+Depth
 
 Initialization strategy:
     RGB:
         Copy the original pretrained YOLO11s first-conv weights exactly.
 
-    IR:
-        Zero initialization.
-
-    Depth:
+    Selected auxiliary modalities:
         Zero initialization.
 
 All layers except the first input convolution remain exactly as loaded
 from pretrained/yolo11s.pt.
 
 Important:
-    This file only defines/builds the 5-channel model.
+    ``build_yolo11s_5ch`` remains as a backward-compatible Exp04 wrapper.
 
-    Forward / loss / backward / gradient verification belongs to:
-        scripts/test_exp04_5ch_model.py
+    Four-channel verification belongs to:
+        scripts/test_configurable_early_fusion_smoke.py
 """
 
+from collections.abc import Iterable
 from pathlib import Path
-from typing import Tuple
 
 import torch
 import torch.nn as nn
 from ultralytics import YOLO
+
+from multimodal_config import (
+    CHANNEL_NAMES,
+    DEFAULT_MODALITIES,
+    MULTIMODAL_CHANNELS,
+    channel_names_for_modalities,
+    channels_for_modalities,
+    normalize_modalities,
+)
 
 
 # ============================================================
@@ -54,15 +59,6 @@ PRETRAINED_MODEL_PATH = (
 # ============================================================
 
 RGB_CHANNELS = 3
-MULTIMODAL_CHANNELS = 5
-
-CHANNEL_NAMES: Tuple[str, ...] = (
-    "R",
-    "G",
-    "B",
-    "IR",
-    "Depth",
-)
 
 
 # ============================================================
@@ -125,8 +121,9 @@ def get_first_conv2d(yolo_model: YOLO) -> nn.Conv2d:
     return first_conv
 
 
-def _replace_first_conv_with_5ch(
+def _replace_first_conv_channels(
     yolo_model: YOLO,
+    in_channels: int,
 ) -> None:
     """
     Replace YOLO11s input Conv2d:
@@ -135,15 +132,14 @@ def _replace_first_conv_with_5ch(
 
     with:
 
-        5 -> C_out
+        in_channels -> C_out
 
     Initialization:
 
         channel 0 = pretrained R
         channel 1 = pretrained G
         channel 2 = pretrained B
-        channel 3 = 0               # IR
-        channel 4 = 0               # Depth
+        channels 3:in_channels = 0  # selected auxiliary modalities
 
     BatchNorm, activation and every later layer are left untouched.
     """
@@ -152,6 +148,11 @@ def _replace_first_conv_with_5ch(
     first_block = detection_model.model[0]
 
     old_conv = get_first_conv2d(yolo_model)
+
+    if in_channels < RGB_CHANNELS:
+        raise ValueError(
+            f"in_channels must be >= {RGB_CHANNELS}, got {in_channels}."
+        )
 
     if old_conv.in_channels != RGB_CHANNELS:
         raise RuntimeError(
@@ -176,7 +177,7 @@ def _replace_first_conv_with_5ch(
 
     # Preserve all structural properties of the pretrained convolution.
     new_conv = nn.Conv2d(
-        in_channels=MULTIMODAL_CHANNELS,
+        in_channels=in_channels,
         out_channels=old_conv.out_channels,
         kernel_size=old_conv.kernel_size,
         stride=old_conv.stride,
@@ -193,19 +194,12 @@ def _replace_first_conv_with_5ch(
     # Explicit deterministic initialization
     # --------------------------------------------------------
     #
-    # First set all 5 channels to zero.
+    # First set all selected channels to zero.
     #
     # Then restore the pretrained RGB weights exactly.
     #
-    # Therefore at initialization:
-    #
-    #   Conv(R,G,B,I,D)
-    #
-    # is equivalent to:
-    #
-    #   Conv_pretrained(R,G,B)
-    #
-    # because the IR and Depth contributions are exactly zero.
+    # Therefore the converted model is initially equivalent to the RGB
+    # pretrained model because all auxiliary contributions are zero.
     # --------------------------------------------------------
 
     with torch.no_grad():
@@ -241,10 +235,16 @@ def _replace_first_conv_with_5ch(
     if isinstance(model_yaml, dict):
 
         # Different Ultralytics revisions may use different names.
-        # Keeping both at 5 is harmless and prevents stale 3-channel
+        # Keeping both synchronized prevents stale 3-channel
         # metadata from being propagated.
-        model_yaml["ch"] = MULTIMODAL_CHANNELS
-        model_yaml["channels"] = MULTIMODAL_CHANNELS
+        model_yaml["ch"] = in_channels
+        model_yaml["channels"] = in_channels
+
+
+def _replace_first_conv_with_5ch(yolo_model: YOLO) -> None:
+    """Backward-compatible Exp04 wrapper."""
+
+    _replace_first_conv_channels(yolo_model, MULTIMODAL_CHANNELS)
 
 
 # ============================================================
@@ -254,6 +254,7 @@ def _replace_first_conv_with_5ch(
 def _verify_initialization(
     original_rgb_weight: torch.Tensor,
     yolo_model: YOLO,
+    modalities: Iterable[str] | str | None = DEFAULT_MODALITIES,
 ) -> None:
     """
     Internal fail-fast verification.
@@ -262,11 +263,14 @@ def _verify_initialization(
     test_exp04_5ch_model.py.
     """
 
+    normalized = normalize_modalities(modalities)
+    expected_channels = channels_for_modalities(normalized)
+    channel_names = channel_names_for_modalities(normalized)
     conv = get_first_conv2d(yolo_model)
 
-    if conv.in_channels != MULTIMODAL_CHANNELS:
+    if conv.in_channels != expected_channels:
         raise AssertionError(
-            "5-channel conversion failed: "
+            "Input-channel conversion failed: "
             f"in_channels={conv.in_channels}"
         )
 
@@ -287,45 +291,47 @@ def _verify_initialization(
             f"max_abs_diff={max_diff}"
         )
 
-    # IR must be exactly zero.
-    if torch.count_nonzero(
-        new_weight[:, 3]
-    ).item() != 0:
-        raise AssertionError(
-            "IR first-conv weights are not zero initialized."
-        )
-
-    # Depth must be exactly zero.
-    if torch.count_nonzero(
-        new_weight[:, 4]
-    ).item() != 0:
-        raise AssertionError(
-            "Depth first-conv weights are not zero initialized."
-        )
+    for channel_index, channel_name in enumerate(
+        channel_names[RGB_CHANNELS:],
+        start=RGB_CHANNELS,
+    ):
+        if torch.count_nonzero(new_weight[:, channel_index]).item() != 0:
+            raise AssertionError(
+                f"{channel_name} first-conv weights are not zero initialized."
+            )
 
 
 # ============================================================
 # Public model builder
 # ============================================================
 
-def build_yolo11s_5ch(
+def build_yolo11s_multimodal(
     pretrained_path: Path = PRETRAINED_MODEL_PATH,
+    modalities: Iterable[str] | str | None = DEFAULT_MODALITIES,
 ) -> YOLO:
     """
-    Build Exp04 5-channel YOLO11s.
+    Build a configurable RGB/RGBI/RGBD/RGBID YOLO11s.
 
     Workflow:
 
         1. Load complete pretrained YOLO11s checkpoint.
         2. Preserve the original pretrained RGB stem weights.
-        3. Replace only the first Conv2d from 3 input channels to 5.
+        3. Replace only the first Conv2d when more than RGB is selected.
         4. Copy pretrained RGB channels exactly.
         5. Zero initialize IR and Depth channels.
         6. Leave every other pretrained parameter untouched.
 
     Returns:
         ultralytics.YOLO
+
+    Examples:
+        RGB+IR    -> modalities=("rgb", "ir")
+        RGB+Depth -> modalities=("rgb", "depth")
+        Exp04     -> modalities=("rgb", "ir", "depth")
     """
+
+    normalized = normalize_modalities(modalities)
+    input_channels = channels_for_modalities(normalized)
 
     pretrained_path = Path(
         pretrained_path
@@ -361,16 +367,30 @@ def build_yolo11s_5ch(
         .clone()
     )
 
-    _replace_first_conv_with_5ch(
-        yolo_model
-    )
+    if input_channels != RGB_CHANNELS:
+        _replace_first_conv_channels(
+            yolo_model,
+            in_channels=input_channels,
+        )
 
     _verify_initialization(
         original_rgb_weight=original_rgb_weight,
         yolo_model=yolo_model,
+        modalities=normalized,
     )
 
     return yolo_model
+
+
+def build_yolo11s_5ch(
+    pretrained_path: Path = PRETRAINED_MODEL_PATH,
+) -> YOLO:
+    """Backward-compatible Exp04 5-channel builder."""
+
+    return build_yolo11s_multimodal(
+        pretrained_path=pretrained_path,
+        modalities=DEFAULT_MODALITIES,
+    )
 
 
 # ============================================================

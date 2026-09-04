@@ -2,25 +2,17 @@
 # -*- coding: utf-8 -*-
 
 """
-AIC2026 - RGB + Infrared + Depth Multimodal YOLO Dataset
+AIC2026 configurable early-fusion YOLO Dataset.
 
-Exp04 input representation:
+Supported representations:
 
-    channel 0 : R
-    channel 1 : G
-    channel 2 : B
-    channel 3 : Infrared grayscale
-    channel 4 : Depth8 grayscale
+    ("rgb",)                -> [R, G, B]
+    ("rgb", "ir")          -> [R, G, B, IR]
+    ("rgb", "depth")       -> [R, G, B, Depth]
+    ("rgb", "ir", "depth") -> [R, G, B, IR, Depth]
 
-Final image before Format:
-
-    H x W x 5
-    uint8
-
-Final tensor after Ultralytics Format:
-
-    5 x H x W
-    uint8
+The Exp04 five-channel representation remains the default for backward
+compatibility. Images are HWC uint8 before Format and CHW uint8 afterwards.
 
 The normal Ultralytics preprocessing later converts it to float and /255.
 
@@ -31,15 +23,15 @@ Design principles
        - labels
        - train / val split
 
-2. IR and Depth are matched by:
+2. Selected auxiliary modalities are matched by:
        split + stem
 
 3. RGB is loaded/resized by the original BaseDataset.load_image().
    This preserves the project's locked Ultralytics behavior.
 
-4. IR and Depth are resized to exactly the same resized_shape as RGB.
+4. Selected auxiliary modalities are resized to RGB's resized_shape.
 
-5. The three modalities are concatenated BEFORE:
+5. Selected modalities are concatenated BEFORE:
        Mosaic
        RandomPerspective
        RandomFlip
@@ -49,8 +41,7 @@ Design principles
 
 6. Standard RandomHSV is replaced with RGBOnlyRandomHSV:
        RGB   -> HSV augmentation
-       IR    -> unchanged
-       Depth -> unchanged
+       auxiliary channels -> unchanged
 
 7. Standard Ultralytics Albumentations is disabled in Exp04 v1.
    Reason:
@@ -60,10 +51,10 @@ Design principles
 
 8. RGB is converted:
        OpenCV BGR -> RGB
-   before building the 5-channel image.
+   before building a 4/5-channel image.
 
    This is required because Ultralytics Format only auto-reverses
-   channels for 3-channel images. For 5-channel images it keeps the
+   channels for 3-channel images. For 4/5-channel images it keeps the
    channel order unchanged.
 
 9. No machine-specific absolute paths are used.
@@ -71,11 +62,12 @@ Design principles
 10. This module does NOT modify any source files under:
         ultralytics/
 
-    Trainer integration will be implemented separately.
+    Existing trainer integration remains separate.
 """
 
 from __future__ import annotations
 
+from collections.abc import Iterable
 from copy import deepcopy
 from pathlib import Path
 from typing import Any
@@ -88,6 +80,17 @@ from ultralytics.data.augment import (
     RandomHSV,
 )
 from ultralytics.data.dataset import YOLODataset
+
+from multimodal_config import (
+    CHANNEL_NAMES,
+    DEFAULT_MODALITIES,
+    DEPTH_MODALITY,
+    IR_MODALITY,
+    MULTIMODAL_CHANNELS,
+    channel_names_for_modalities,
+    channels_for_modalities,
+    normalize_modalities,
+)
 
 
 # ============================================================
@@ -120,16 +123,6 @@ DEPTH_VIEW_ROOT = (
 # ============================================================
 # Multimodal definition
 # ============================================================
-
-MULTIMODAL_CHANNELS = 5
-
-CHANNEL_NAMES = (
-    "R",
-    "G",
-    "B",
-    "IR",
-    "Depth",
-)
 
 SUPPORTED_SPLITS = (
     "train",
@@ -188,16 +181,26 @@ class MultimodalAlbumentationsNoOp:
 
 class RGBOnlyRandomHSV(RandomHSV):
     """
-    RandomHSV variant for a 5-channel RGB/IR/Depth image.
+    RandomHSV variant for a 4/5-channel early-fusion image.
 
-    Input channel order:
+    Input channel order begins with:
 
-        [R, G, B, IR, Depth]
+        [R, G, B, ...]
 
     Only channels 0:3 are modified.
 
-    IR and Depth remain bit-identical before/after this transform.
+    Every selected auxiliary channel remains bit-identical.
     """
+
+    def __init__(
+        self,
+        *args,
+        expected_channels: int = MULTIMODAL_CHANNELS,
+        **kwargs,
+    ):
+
+        super().__init__(*args, **kwargs)
+        self.expected_channels = int(expected_channels)
 
     def apply_image(
         self,
@@ -209,12 +212,12 @@ class RGBOnlyRandomHSV(RandomHSV):
 
         if (
             img.ndim != 3
-            or img.shape[2] != MULTIMODAL_CHANNELS
+            or img.shape[2] != self.expected_channels
         ):
 
             raise RuntimeError(
                 "RGBOnlyRandomHSV expected a "
-                f"{MULTIMODAL_CHANNELS}-channel HWC image, "
+                f"{self.expected_channels}-channel HWC image, "
                 f"but received shape={img.shape}"
             )
 
@@ -564,9 +567,9 @@ def _resize_gray_to_hw(
 
 class MultimodalYOLODataset(YOLODataset):
     """
-    YOLO detection Dataset for:
+    Configurable early-fusion YOLO detection Dataset.
 
-        RGB + Infrared + Depth
+    Supported inputs are RGB, RGB+IR, RGB+Depth, and RGB+IR+Depth.
 
     Canonical image list and labels come from rgb_v1.
 
@@ -578,6 +581,7 @@ class MultimodalYOLODataset(YOLODataset):
     def __init__(
         self,
         *args,
+        modalities: Iterable[str] | str | None = DEFAULT_MODALITIES,
         ir_view_root: str | Path | None = None,
         depth_view_root: str | Path | None = None,
         **kwargs,
@@ -610,6 +614,10 @@ class MultimodalYOLODataset(YOLODataset):
                 f"Received cache={cache_mode!r}"
             )
 
+        self.modalities = normalize_modalities(modalities)
+        self.channel_names = channel_names_for_modalities(self.modalities)
+        self.num_channels = channels_for_modalities(self.modalities)
+
         self.ir_view_root = Path(
             ir_view_root
             if ir_view_root is not None
@@ -636,21 +644,23 @@ class MultimodalYOLODataset(YOLODataset):
             **kwargs,
         )
 
-        # Auxiliary modality indexes.
+        # Build indexes only for selected auxiliary modalities. This matters
+        # for controlled RGB+IR and RGB+Depth experiments: the unused view is
+        # neither required nor accidentally read.
         self._ir_index = (
-            _build_image_index(
-                self.ir_view_root
-            )
+            _build_image_index(self.ir_view_root)
+            if IR_MODALITY in self.modalities
+            else None
         )
 
         self._depth_index = (
-            _build_image_index(
-                self.depth_view_root
-            )
+            _build_image_index(self.depth_view_root)
+            if DEPTH_MODALITY in self.modalities
+            else None
         )
 
-        # Fail immediately if any canonical RGB sample has no
-        # corresponding IR / Depth pair.
+        # Fail immediately if a canonical RGB sample has no corresponding
+        # pair for any selected auxiliary modality.
 
         self._validate_multimodal_pairs()
 
@@ -717,50 +727,27 @@ class MultimodalYOLODataset(YOLODataset):
             ]
         )
 
-        try:
+        paths = {"rgb": rgb_path}
 
-            ir_path = (
-                self._ir_index[
-                    key
-                ]
-            )
+        for modality, modality_index, label in (
+            (IR_MODALITY, self._ir_index, "IR"),
+            (DEPTH_MODALITY, self._depth_index, "Depth"),
+        ):
+            if modality not in self.modalities:
+                continue
+            if modality_index is None:
+                raise AssertionError(f"{label} index was not initialized.")
+            try:
+                paths[modality] = modality_index[key]
+            except KeyError as exc:
+                raise FileNotFoundError(
+                    f"{label} pair missing:\n"
+                    f"  RGB   : {rgb_path}\n"
+                    f"  split : {key[0]}\n"
+                    f"  stem  : {key[1]}"
+                ) from exc
 
-        except KeyError as exc:
-
-            raise FileNotFoundError(
-                "IR pair missing:\n"
-                f"  RGB   : {rgb_path}\n"
-                f"  split : {key[0]}\n"
-                f"  stem  : {key[1]}"
-            ) from exc
-
-        try:
-
-            depth_path = (
-                self._depth_index[
-                    key
-                ]
-            )
-
-        except KeyError as exc:
-
-            raise FileNotFoundError(
-                "Depth pair missing:\n"
-                f"  RGB   : {rgb_path}\n"
-                f"  split : {key[0]}\n"
-                f"  stem  : {key[1]}"
-            ) from exc
-
-        return {
-            "rgb":
-                rgb_path,
-
-            "ir":
-                ir_path,
-
-            "depth":
-                depth_path,
-        }
+        return paths
 
     def _validate_multimodal_pairs(
         self,
@@ -780,8 +767,8 @@ class MultimodalYOLODataset(YOLODataset):
             )
 
             if (
-                key
-                not in self._ir_index
+                self._ir_index is not None
+                and key not in self._ir_index
             ):
 
                 missing_ir.append(
@@ -789,8 +776,8 @@ class MultimodalYOLODataset(YOLODataset):
                 )
 
             if (
-                key
-                not in self._depth_index
+                self._depth_index is not None
+                and key not in self._depth_index
             ):
 
                 missing_depth.append(
@@ -849,23 +836,23 @@ class MultimodalYOLODataset(YOLODataset):
         index: int,
     ) -> dict[str, Any]:
         """
-        Load:
-
-            RGB
-            Infrared
-            Depth
-
-        and return one 5-channel sample before augmentation.
+        Load the selected modalities and return one sample before augmentation.
 
         Important:
             RGB resizing is performed by the ORIGINAL
             BaseDataset.load_image().
 
-            IR and Depth are then resized to exactly the same
+            Selected auxiliary modalities are resized to exactly the same
             resized_shape.
 
         This avoids reimplementing Ultralytics resize logic.
         """
+
+        # Preserve the exact standard Ultralytics path for the RGB-only
+        # control experiment. In particular, Format owns BGR -> RGB for a
+        # normal 3-channel image.
+        if self.modalities == ("rgb",):
+            return super().get_image_and_label(index)
 
         # ----------------------------------------------------
         # Start from canonical RGB label.
@@ -933,19 +920,17 @@ class MultimodalYOLODataset(YOLODataset):
             index
         )
 
-        ir_gray = _read_grayscale_uint8(
-            paths[
-                "ir"
-            ],
-            "IR",
-        )
-
-        depth_gray = _read_grayscale_uint8(
-            paths[
-                "depth"
-            ],
-            "Depth",
-        )
+        modality_labels = {
+            IR_MODALITY: "IR",
+            DEPTH_MODALITY: "Depth",
+        }
+        auxiliary_images = {
+            modality: _read_grayscale_uint8(
+                paths[modality],
+                modality_labels[modality],
+            )
+            for modality in self.modalities[1:]
+        }
 
         # ----------------------------------------------------
         # Raw spatial-alignment assertion.
@@ -964,49 +949,20 @@ class MultimodalYOLODataset(YOLODataset):
             ),
         )
 
-        ir_ori_shape = (
-            int(
-                ir_gray.shape[0]
-            ),
-            int(
-                ir_gray.shape[1]
-            ),
-        )
-
-        depth_ori_shape = (
-            int(
-                depth_gray.shape[0]
-            ),
-            int(
-                depth_gray.shape[1]
-            ),
-        )
-
-        if (
-            ir_ori_shape
-            != expected_ori_shape
-        ):
-
-            raise RuntimeError(
-                "RGB / IR raw spatial mismatch:\n"
-                f"  RGB   : {paths['rgb']}\n"
-                f"  IR    : {paths['ir']}\n"
-                f"  RGB HW: {expected_ori_shape}\n"
-                f"  IR  HW: {ir_ori_shape}"
+        for modality, gray in auxiliary_images.items():
+            auxiliary_shape = (
+                int(gray.shape[0]),
+                int(gray.shape[1]),
             )
-
-        if (
-            depth_ori_shape
-            != expected_ori_shape
-        ):
-
-            raise RuntimeError(
-                "RGB / Depth raw spatial mismatch:\n"
-                f"  RGB     : {paths['rgb']}\n"
-                f"  Depth   : {paths['depth']}\n"
-                f"  RGB HW  : {expected_ori_shape}\n"
-                f"  Depth HW: {depth_ori_shape}"
-            )
+            if auxiliary_shape != expected_ori_shape:
+                label_name = modality_labels[modality]
+                raise RuntimeError(
+                    f"RGB / {label_name} raw spatial mismatch:\n"
+                    f"  RGB    : {paths['rgb']}\n"
+                    f"  {label_name:<7}: {paths[modality]}\n"
+                    f"  RGB HW : {expected_ori_shape}\n"
+                    f"  {label_name} HW: {auxiliary_shape}"
+                )
 
         # ----------------------------------------------------
         # Resize auxiliary modalities to exactly the output
@@ -1022,15 +978,10 @@ class MultimodalYOLODataset(YOLODataset):
             ),
         )
 
-        ir_gray = _resize_gray_to_hw(
-            ir_gray,
-            target_hw,
-        )
-
-        depth_gray = _resize_gray_to_hw(
-            depth_gray,
-            target_hw,
-        )
+        auxiliary_images = {
+            modality: _resize_gray_to_hw(gray, target_hw)
+            for modality, gray in auxiliary_images.items()
+        }
 
         if (
             rgb_bgr.shape[:2]
@@ -1061,25 +1012,15 @@ class MultimodalYOLODataset(YOLODataset):
         )
 
         # ----------------------------------------------------
-        # Build H x W x 5:
-        #
-        # [R, G, B, IR, Depth]
+        # Build H x W x C in the exact order described by self.modalities.
         # ----------------------------------------------------
 
-        multimodal = np.concatenate(
-            (
-                rgb,
-                ir_gray[
-                    ...,
-                    None,
-                ],
-                depth_gray[
-                    ...,
-                    None,
-                ],
-            ),
-            axis=2,
+        channel_arrays = [rgb]
+        channel_arrays.extend(
+            auxiliary_images[modality][..., None]
+            for modality in self.modalities[1:]
         )
+        multimodal = np.concatenate(channel_arrays, axis=2)
 
         multimodal = np.ascontiguousarray(
             multimodal
@@ -1088,11 +1029,13 @@ class MultimodalYOLODataset(YOLODataset):
         if (
             multimodal.ndim != 3
             or multimodal.shape[2]
-            != MULTIMODAL_CHANNELS
+            != self.num_channels
         ):
 
             raise RuntimeError(
                 "Multimodal concatenation failed:\n"
+                f"  modalities={self.modalities}\n"
+                f"  expected channels={self.num_channels}\n"
                 f"  shape={multimodal.shape}"
             )
 
@@ -1173,6 +1116,9 @@ class MultimodalYOLODataset(YOLODataset):
         the project's original implementations.
         """
 
+        if self.modalities == ("rgb",):
+            return super().build_transforms(hyp)
+
         if (
             self.augment
             and float(
@@ -1204,9 +1150,7 @@ class MultimodalYOLODataset(YOLODataset):
             #
             # LetterBox + Format
             #
-            # The 5-channel Format keeps channel order unchanged,
-            # which is exactly what we want because input is
-            # already [R,G,B,IR,Depth].
+            # The 4/5-channel Format keeps channel order unchanged.
 
             return transforms
 
@@ -1242,6 +1186,7 @@ class MultimodalYOLODataset(YOLODataset):
                     hgain=transform.hgain,
                     sgain=transform.sgain,
                     vgain=transform.vgain,
+                    expected_channels=self.num_channels,
                 )
 
                 hsv_replaced += 1
@@ -1298,4 +1243,8 @@ __all__ = [
     "DEPTH_VIEW_ROOT",
     "MULTIMODAL_CHANNELS",
     "CHANNEL_NAMES",
+    "DEFAULT_MODALITIES",
+    "normalize_modalities",
+    "channel_names_for_modalities",
+    "channels_for_modalities",
 ]
