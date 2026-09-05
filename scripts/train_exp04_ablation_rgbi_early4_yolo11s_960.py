@@ -75,7 +75,12 @@ EXPERIMENT_NAME = "exp04_ablation_rgbi_early4_yolo11s_960"
 
 PROJECT_ROOT = Path(__file__).resolve().parents[1]
 PRETRAINED_MODEL_PATH = PROJECT_ROOT / "pretrained" / "yolo11s.pt"
-DATA_YAML = PROJECT_ROOT / "yolo_views" / "rgb_v1" / "data.yaml"
+DATA_YAML = (
+    PROJECT_ROOT
+    / "yolo_views"
+    / "rgb_v1"
+    / "data_exp04_rgbi_4ch.yaml"
+)
 RUNS_DIR = PROJECT_ROOT / "runs"
 RUN_DIR = RUNS_DIR / EXPERIMENT_NAME
 
