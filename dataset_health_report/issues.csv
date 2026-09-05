@@ -1,9 +1,10 @@
 ﻿stem,issue
 000003_026_00000001,bbox_cross_image_boundary_line_1
+000003_080_00000307,label_invalid_xywh_line_8
 00000004,depth_is_jpeg
 00000004,depth_dtype_uint8
 00000004,"depth_not_single_channel_shape_(360, 640, 3)"
-000005_014_00000292,bbox_cross_image_boundary_line_6
+000005_014_00000292,bbox_cross_image_boundary_line_5
 00000008,depth_is_jpeg
 00000008,depth_dtype_uint8
 00000008,"depth_not_single_channel_shape_(360, 640, 3)"
@@ -39,21 +40,21 @@
 00000043,depth_is_jpeg
 00000043,depth_dtype_uint8
 00000043,"depth_not_single_channel_shape_(360, 640, 3)"
-000045,bbox_cross_image_boundary_line_23
 00000045,depth_is_jpeg
 00000045,depth_dtype_uint8
 00000045,"depth_not_single_channel_shape_(360, 640, 3)"
+000045,bbox_cross_image_boundary_line_23
 00000047,depth_is_jpeg
 00000047,depth_dtype_uint8
 00000047,"depth_not_single_channel_shape_(360, 640, 3)"
 00000049,depth_is_jpeg
 00000049,depth_dtype_uint8
 00000049,"depth_not_single_channel_shape_(360, 640, 3)"
-000050,label_invalid_xywh_line_27
-000050,label_invalid_xywh_line_37
 00000050,depth_is_jpeg
 00000050,depth_dtype_uint8
 00000050,"depth_not_single_channel_shape_(360, 640, 3)"
+000050,label_invalid_xywh_line_27
+000050,label_invalid_xywh_line_37
 00000052,depth_is_jpeg
 00000052,depth_dtype_uint8
 00000052,"depth_not_single_channel_shape_(360, 640, 3)"
@@ -471,9 +472,7 @@
 001038,bbox_cross_image_boundary_line_7
 001047,bbox_cross_image_boundary_line_12
 001168,bbox_cross_image_boundary_line_1
-001202,bbox_cross_image_boundary_line_7
-001257,bbox_cross_image_boundary_line_1
-001260,bbox_cross_image_boundary_line_1
+001202,bbox_cross_image_boundary_line_6
 001265,bbox_cross_image_boundary_line_6
 001387,bbox_cross_image_boundary_line_10
 001388,bbox_cross_image_boundary_line_4
@@ -483,22 +482,9 @@
 001803,bbox_cross_image_boundary_line_6
 001813,bbox_cross_image_boundary_line_6
 001833,bbox_cross_image_boundary_line_3
-001835,bbox_cross_image_boundary_line_1
-001835,bbox_cross_image_boundary_line_3
-001841,bbox_cross_image_boundary_line_1
-001841,bbox_cross_image_boundary_line_3
-001851,bbox_cross_image_boundary_line_1
-001851,bbox_cross_image_boundary_line_3
-001854,bbox_cross_image_boundary_line_1
-001859,bbox_cross_image_boundary_line_3
 001865,bbox_cross_image_boundary_line_1
 001873,bbox_cross_image_boundary_line_1
-001881,bbox_cross_image_boundary_line_1
-001884,bbox_cross_image_boundary_line_1
 001884,bbox_cross_image_boundary_line_8
-001886,bbox_cross_image_boundary_line_1
-001886,bbox_cross_image_boundary_line_3
-001891,bbox_cross_image_boundary_line_1
 001986,bbox_cross_image_boundary_line_6
 001987,bbox_cross_image_boundary_line_6
 001989,bbox_cross_image_boundary_line_6
@@ -511,8 +497,6 @@
 002016,bbox_cross_image_boundary_line_8
 002022,bbox_cross_image_boundary_line_8
 002029,bbox_cross_image_boundary_line_8
-002065,bbox_cross_image_boundary_line_12
-002079,bbox_cross_image_boundary_line_11
 002598,bbox_cross_image_boundary_line_4
 002598,bbox_cross_image_boundary_line_6
 002598,bbox_cross_image_boundary_line_14

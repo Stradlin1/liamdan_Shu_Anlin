@@ -42,60 +42,61 @@ depth    : {'uint16': 1851, 'uint8': 149}
 平均通道 MAD      : 0.9645
 
 [7] 标签
-目标总实例数      : 14413
-空标签文件        : 0
+目标总实例数      : 15190
+空标签文件        : 1
 每图目标数 P05/P50/P95 : 1.0 / 5.0 / 21.0
 
 [8] 类别分布
- 0 person       instances=  5496 images= 1112
+ 0 person       instances=  5545 images= 1114
  1 boat         instances=   135 images=   62
- 2 animal       instances=  3061 images=  799
- 3 seat         instances=   621 images=  315
- 4 sign         instances=   809 images=  441
- 5 bicycle      instances=   665 images=  213
- 6 car          instances=  1571 images=  403
- 7 ball         instances=    89 images=   75
- 8 light        instances=  1455 images=  467
+ 2 animal       instances=  3020 images=  798
+ 3 seat         instances=   641 images=  322
+ 4 sign         instances=   788 images=  424
+ 5 bicycle      instances=   665 images=  214
+ 6 car          instances=  1949 images=  459
+ 7 ball         instances=    95 images=   78
+ 8 light        instances=  1835 images=  542
  9 garbage_can  instances=   282 images=  231
-10 uav          instances=   204 images=  148
-11 tricycle     instances=    25 images=   21
+10 uav          instances=   208 images=  150
+11 tricycle     instances=    27 images=   23
 
 [9] Bounding Box
 width px P01/P05/P50 : 13.0 / 18.0 / 69.0
-height px P01/P05/P50: 13.0 / 23.0 / 80.0
-area ratio P01/P05/P50: 0.000137 / 0.000289 / 0.003070
-COCO small  : 1768
-COCO medium : 6880
-COCO large  : 5765
+height px P01/P05/P50: 14.0 / 23.0 / 76.7
+area ratio P01/P05/P50: 0.000139 / 0.000301 / 0.002876
+COCO small  : 1802
+COCO medium : 7512
+COCO large  : 5876
 
 [10] 相邻 visible 图像相似度
 检查相邻对数       : 1999
-dHash <= 5 极相似  : 153
-dHash 6~10 较相似  : 87
+dHash <= 5 极相似  : 152
+dHash 6~10 较相似  : 88
 
 说明：如果极相似相邻帧很多，后续不建议随机逐图划分 train/val。
 
 [11] Issues
-问题记录总数       : 527
+问题记录总数       : 511
    149  depth_is_jpeg
    149  depth_dtype_uint8
    149  depth_not_single_channel_shape_(360, 640, 3)
-    22  bbox_cross_image_boundary_line_1
+    12  bbox_cross_image_boundary_line_1
     11  bbox_cross_image_boundary_line_8
      8  bbox_cross_image_boundary_line_6
-     8  bbox_cross_image_boundary_line_3
      4  bbox_cross_image_boundary_line_4
-     4  bbox_cross_image_boundary_line_12
-     3  bbox_cross_image_boundary_line_7
+     3  bbox_cross_image_boundary_line_5
+     3  bbox_cross_image_boundary_line_3
+     3  bbox_cross_image_boundary_line_12
      3  bbox_cross_image_boundary_line_2
-     2  bbox_cross_image_boundary_line_5
      2  bbox_cross_image_boundary_line_9
-     2  bbox_cross_image_boundary_line_11
+     2  bbox_cross_image_boundary_line_7
      2  bbox_cross_image_boundary_line_14
+     1  label_invalid_xywh_line_8
      1  bbox_cross_image_boundary_line_28
      1  bbox_cross_image_boundary_line_23
      1  label_invalid_xywh_line_27
      1  label_invalid_xywh_line_37
+     1  bbox_cross_image_boundary_line_11
      1  bbox_cross_image_boundary_line_15
      1  bbox_cross_image_boundary_line_10
      1  label_invalid_xywh_line_2
