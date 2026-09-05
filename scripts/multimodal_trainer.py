@@ -2,37 +2,43 @@
 # -*- coding: utf-8 -*-
 
 """
-AIC2026 Exp04
-Custom Ultralytics DetectionTrainer for RGB + IR + Depth Early Fusion.
+AIC2026 configurable early-fusion DetectionTrainer.
+
+Supported input configurations:
+
+    ("rgb",)                  -> [R, G, B] = 3 channels
+    ("rgb", "ir")            -> [R, G, B, IR] = 4 channels
+    ("rgb", "depth")         -> [R, G, B, Depth] = 4 channels
+    ("rgb", "ir", "depth") -> [R, G, B, IR, Depth] = 5 channels
 
 Responsibilities:
 
-1. Force model input channels to:
-       [R, G, B, IR, Depth] = 5 channels
-
-2. Build:
-       MultimodalYOLODataset
-   instead of:
-       YOLODataset
-
-3. Build the detection model using the actual competition class count
-   from data.yaml (12 classes).
-
-4. Load pretrained YOLO11s weights.
-
+1. Keep RGB as the canonical YOLO dataset/label/split anchor.
+2. Build MultimodalYOLODataset with the selected modalities.
+3. Build the detection model using the selected input-channel count and
+   the actual competition class count from data.yaml.
+4. Load pretrained YOLO11s weights without modifying Ultralytics source.
 5. For a 3-channel pretrained checkpoint:
-       RGB   <- pretrained exactly
-       IR    <- zero
-       Depth <- zero
+       RGB <- pretrained exactly
+       selected auxiliary channels <- zero
+6. When resuming from an already-trained multimodal checkpoint, preserve
+   all learned input-channel weights exactly.
 
-6. Preserve learned 5-channel weights when resuming from a 5-channel
-   checkpoint. Never zero IR/Depth during resume.
+Backward compatibility:
 
-Ultralytics source itself is not modified.
+    modalities is optional. Omitting it keeps the original Exp04 default:
+        RGB + IR + Depth = 5 channels.
+
+Important:
+
+    RGB+IR and RGB+Depth are both 4-channel tensors. Tensor shape alone
+    cannot distinguish their semantic meaning, so callers must only resume
+    a 4-channel checkpoint with the same modality configuration.
 """
 
 from __future__ import annotations
 
+from collections.abc import Iterable
 from copy import copy
 from typing import Any
 
@@ -43,14 +49,19 @@ from ultralytics.models.yolo.detect.train import DetectionTrainer
 from ultralytics.utils import LOGGER, colorstr
 from ultralytics.utils.torch_utils import unwrap_model
 
-from multimodal_dataset import (
+from multimodal_config import (
     CHANNEL_NAMES,
+    DEFAULT_MODALITIES,
     MULTIMODAL_CHANNELS,
-    MultimodalYOLODataset,
+    channel_names_for_modalities,
+    channels_for_modalities,
+    normalize_modalities,
 )
+from multimodal_dataset import MultimodalYOLODataset
 
 
 FIRST_CONV_KEY = "model.0.conv.weight"
+RGB_CHANNELS = 3
 
 
 # ============================================================
@@ -60,15 +71,7 @@ FIRST_CONV_KEY = "model.0.conv.weight"
 def _get_first_conv(
     model: nn.Module,
 ) -> nn.Conv2d:
-    """
-    Return YOLO's first Conv2d.
-
-    Expected structure:
-
-        DetectionModel
-            -> model[0]
-                -> conv
-    """
+    """Return YOLO's first Conv2d."""
 
     if not hasattr(model, "model"):
         raise RuntimeError(
@@ -158,9 +161,7 @@ class MultimodalDetectionTrainer(
     DetectionTrainer
 ):
     """
-    Ultralytics DetectionTrainer adapted for Exp04.
-
-    We intentionally keep the customization small.
+    Ultralytics DetectionTrainer for configurable early-fusion inputs.
 
     Original Ultralytics continues to handle:
 
@@ -175,8 +176,32 @@ class MultimodalDetectionTrainer(
         DDP
         resume
 
-    We only replace the multimodal-specific parts.
+    This trainer only owns multimodal-specific configuration, dataset
+    construction, channel metadata, and first-convolution verification.
     """
+
+    def __init__(
+        self,
+        *args,
+        modalities: Iterable[str] | str | None = DEFAULT_MODALITIES,
+        **kwargs,
+    ):
+        # These attributes must exist before DetectionTrainer.__init__ runs,
+        # because the parent constructor may call get_dataset()/get_model().
+        self.modalities = normalize_modalities(
+            modalities
+        )
+        self.channel_names = channel_names_for_modalities(
+            self.modalities
+        )
+        self.input_channels = channels_for_modalities(
+            self.modalities
+        )
+
+        super().__init__(
+            *args,
+            **kwargs,
+        )
 
     # --------------------------------------------------------
     # Dataset metadata
@@ -184,32 +209,30 @@ class MultimodalDetectionTrainer(
 
     def get_dataset(self):
         """
-        Load normal detection dataset metadata, then override the
-        in-memory channel count to 5.
+        Load normal detection dataset metadata, then override only the
+        in-memory input-channel count for the selected modality set.
 
-        We do NOT modify rgb_v1/data.yaml on disk because that YAML is
-        also part of the RGB baseline view.
-
-        This keeps Exp01 reproducible while allowing Exp04 to use the
-        same RGB image/label membership as its anchor view.
+        The RGB view YAML is not modified on disk, so existing RGB and
+        Exp04 experiments remain reproducible.
         """
 
         data = super().get_dataset()
 
         original_channels = data.get(
             "channels",
-            3,
+            RGB_CHANNELS,
         )
 
         data["channels"] = (
-            MULTIMODAL_CHANNELS
+            self.input_channels
         )
 
         LOGGER.info(
-            "Exp04 multimodal channels: "
+            "Configurable multimodal channels: "
             f"{original_channels} -> "
-            f"{MULTIMODAL_CHANNELS} "
-            f"{CHANNEL_NAMES}"
+            f"{self.input_channels}; "
+            f"modalities={self.modalities}; "
+            f"order={self.channel_names}"
         )
 
         return data
@@ -225,8 +248,8 @@ class MultimodalDetectionTrainer(
         batch: int | None = None,
     ):
         """
-        Build MultimodalYOLODataset using the same arguments that
-        Ultralytics normally supplies to YOLODataset.
+        Build MultimodalYOLODataset with the selected modalities using
+        the same core arguments Ultralytics supplies to YOLODataset.
         """
 
         if mode not in {
@@ -283,6 +306,7 @@ class MultimodalDetectionTrainer(
             classes=self.args.classes,
             data=self.data,
             fraction=fraction,
+            modalities=self.modalities,
         )
 
         if not isinstance(
@@ -293,10 +317,26 @@ class MultimodalDetectionTrainer(
                 "Trainer constructed the wrong dataset class."
             )
 
+        if dataset.modalities != self.modalities:
+            raise AssertionError(
+                "Trainer/Dataset modality mismatch: "
+                f"trainer={self.modalities}, "
+                f"dataset={dataset.modalities}"
+            )
+
+        if dataset.num_channels != self.input_channels:
+            raise AssertionError(
+                "Trainer/Dataset channel-count mismatch: "
+                f"trainer={self.input_channels}, "
+                f"dataset={dataset.num_channels}"
+            )
+
         LOGGER.info(
-            f"Exp04 {mode} dataset: "
+            f"Configurable {mode} dataset: "
             f"{type(dataset).__name__}, "
-            f"samples={len(dataset)}"
+            f"samples={len(dataset)}, "
+            f"modalities={self.modalities}, "
+            f"channels={self.input_channels}"
         )
 
         return dataset
@@ -312,21 +352,19 @@ class MultimodalDetectionTrainer(
         verbose: bool = True,
     ):
         """
-        Build the normal Ultralytics detection model, but ensure:
+        Build the normal Ultralytics detection model while enforcing:
 
-            input channels = 5
+            input channels = selected modality channel count
             output classes = dataset nc
 
-        For 3-channel pretrained weights:
+        Initialization policy:
 
-            pretrained[:, 0:3] -> RGB
-            new[:, 3]          -> zero
-            new[:, 4]          -> zero
+            3-channel source checkpoint:
+                RGB <- source exactly
+                selected auxiliary channels <- zero
 
-        For 5-channel resume checkpoints:
-
-            load all five learned channels normally
-            DO NOT zero channels 3/4.
+            same-channel multimodal checkpoint:
+                preserve the complete learned first convolution exactly
         """
 
         source_first_weight = (
@@ -335,21 +373,8 @@ class MultimodalDetectionTrainer(
             )
         )
 
-        # ----------------------------------------------------
-        # Let the locked Ultralytics DetectionTrainer perform
-        # its normal model creation:
-        #
-        #   DetectionModel(
-        #       cfg,
-        #       nc=self.data["nc"],
-        #       ch=self.data["channels"],
-        #   )
-        #
-        # This is important because the competition model must
-        # have a 12-class head rather than the 80-class COCO head
-        # used by the standalone model smoke test.
-        # ----------------------------------------------------
-
+        # Let the locked Ultralytics DetectionTrainer perform its normal
+        # DetectionModel creation using self.data["channels"] and nc.
         model = super().get_model(
             cfg=cfg,
             weights=weights,
@@ -362,11 +387,12 @@ class MultimodalDetectionTrainer(
 
         if (
             first_conv.in_channels
-            != MULTIMODAL_CHANNELS
+            != self.input_channels
         ):
             raise AssertionError(
                 "Trainer model has incorrect input channels: "
-                f"{first_conv.in_channels}"
+                f"actual={first_conv.in_channels}, "
+                f"expected={self.input_channels}"
             )
 
         # Check detection head class count.
@@ -388,53 +414,49 @@ class MultimodalDetectionTrainer(
             )
 
         # ----------------------------------------------------
-        # Initialization policy
+        # Initialization / resume policy
         # ----------------------------------------------------
 
         if source_first_weight is None:
 
-            # Scratch-model fallback.
-            #
-            # Exp04 normally does NOT use this path because we train
-            # from pretrained/yolo11s.pt.
+            # Scratch-model fallback. RGB keeps the model's normal random
+            # initialization while every selected auxiliary input is zeroed.
             with torch.no_grad():
                 first_conv.weight[
                     :,
-                    3:MULTIMODAL_CHANNELS,
+                    RGB_CHANNELS:self.input_channels,
                 ].zero_()
 
             LOGGER.warning(
                 "No source first-conv weight found. "
-                "RGB uses model initialization; "
-                "IR/Depth were zero-initialized."
+                "RGB uses model initialization; selected auxiliary "
+                f"channels were zero-initialized: "
+                f"{self.channel_names[RGB_CHANNELS:]}"
             )
 
         else:
 
-            source_channels = (
+            source_channels = int(
                 source_first_weight.shape[1]
             )
 
             # ------------------------------------------------
-            # Standard Exp04 start:
-            #
-            # COCO checkpoint = 3 channels.
+            # Standard start from a 3-channel COCO checkpoint.
             # ------------------------------------------------
 
-            if source_channels == 3:
+            if source_channels == RGB_CHANNELS:
 
                 with torch.no_grad():
-
                     first_conv.weight[
                         :,
-                        3:MULTIMODAL_CHANNELS,
+                        RGB_CHANNELS:self.input_channels,
                     ].zero_()
 
                 target_rgb = (
                     first_conv
                     .weight[
                         :,
-                        0:3,
+                        0:RGB_CHANNELS,
                     ]
                     .detach()
                     .cpu()
@@ -443,7 +465,7 @@ class MultimodalDetectionTrainer(
                 source_rgb = (
                     source_first_weight[
                         :,
-                        0:3,
+                        0:RGB_CHANNELS,
                     ]
                 )
 
@@ -474,40 +496,31 @@ class MultimodalDetectionTrainer(
                         f"max_abs_diff={max_diff}"
                     )
 
-                ir_nonzero = torch.count_nonzero(
-                    first_conv.weight[:, 3]
-                ).item()
+                for channel_index, channel_name in enumerate(
+                    self.channel_names[RGB_CHANNELS:],
+                    start=RGB_CHANNELS,
+                ):
+                    nonzero = torch.count_nonzero(
+                        first_conv.weight[:, channel_index]
+                    ).item()
 
-                depth_nonzero = torch.count_nonzero(
-                    first_conv.weight[:, 4]
-                ).item()
-
-                if ir_nonzero != 0:
-                    raise AssertionError(
-                        "IR first-conv initialization is not zero."
-                    )
-
-                if depth_nonzero != 0:
-                    raise AssertionError(
-                        "Depth first-conv initialization is not zero."
-                    )
+                    if nonzero != 0:
+                        raise AssertionError(
+                            f"{channel_name} first-conv initialization "
+                            "is not zero."
+                        )
 
                 LOGGER.info(
-                    "Exp04 pretrained stem initialization: "
-                    "RGB=exact pretrained, IR=zero, Depth=zero"
+                    "Pretrained stem initialization: "
+                    "RGB=exact pretrained; "
+                    f"auxiliary=zero {self.channel_names[RGB_CHANNELS:]}"
                 )
 
             # ------------------------------------------------
-            # Resume / fine-tune from an already-trained
-            # multimodal checkpoint.
-            #
-            # Absolutely do not zero auxiliary channels here.
+            # Resume/fine-tune from a same-channel checkpoint.
             # ------------------------------------------------
 
-            elif (
-                source_channels
-                == MULTIMODAL_CHANNELS
-            ):
+            elif source_channels == self.input_channels:
 
                 target_weight = (
                     first_conv
@@ -518,11 +531,17 @@ class MultimodalDetectionTrainer(
 
                 if (
                     target_weight.shape
-                    == source_first_weight.shape
-                    and not torch.equal(
-                        target_weight,
-                        source_first_weight,
+                    != source_first_weight.shape
+                ):
+                    raise AssertionError(
+                        "Resume first-conv shape mismatch:\n"
+                        f"target={tuple(target_weight.shape)}\n"
+                        f"source={tuple(source_first_weight.shape)}"
                     )
+
+                if not torch.equal(
+                    target_weight,
+                    source_first_weight,
                 ):
                     max_diff = (
                         target_weight
@@ -530,29 +549,39 @@ class MultimodalDetectionTrainer(
                     ).abs().max().item()
 
                     raise AssertionError(
-                        "5-channel resume first-conv weights "
-                        "were not restored exactly. "
+                        "Resume first-conv weights were not restored "
+                        "exactly. "
                         f"max_abs_diff={max_diff}"
                     )
 
+                if self.input_channels == 4:
+                    LOGGER.warning(
+                        "4-channel checkpoint detected. Tensor shape "
+                        "cannot distinguish RGB+IR from RGB+Depth; "
+                        "caller must ensure checkpoint modalities match "
+                        f"current modalities={self.modalities}."
+                    )
+
                 LOGGER.info(
-                    "Exp04 5-channel checkpoint detected: "
-                    "preserving learned RGB/IR/Depth stem weights."
+                    "Same-channel checkpoint detected: preserving learned "
+                    f"stem weights for {self.channel_names}."
                 )
 
             else:
 
                 raise RuntimeError(
                     "Unsupported pretrained input channel count: "
-                    f"{source_channels}. "
-                    "Expected 3 or 5."
+                    f"{source_channels}. Expected either "
+                    f"{RGB_CHANNELS} (RGB pretrained) or "
+                    f"{self.input_channels} (same-channel resume)."
                 )
 
         LOGGER.info(
-            "Exp04 model ready: "
+            "Configurable model ready: "
+            f"modalities={self.modalities}, "
             f"channels={first_conv.in_channels}, "
             f"classes={head_nc}, "
-            f"order={CHANNEL_NAMES}"
+            f"order={self.channel_names}"
         )
 
         return model
@@ -579,12 +608,17 @@ def main() -> None:
     )
 
     print(
-        "Channels:",
+        "Default modalities:",
+        DEFAULT_MODALITIES,
+    )
+
+    print(
+        "Default channels:",
         MULTIMODAL_CHANNELS,
     )
 
     print(
-        "Order   :",
+        "Default order   :",
         CHANNEL_NAMES,
     )
 
